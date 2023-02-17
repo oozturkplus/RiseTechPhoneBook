@@ -3,9 +3,32 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DF3F183B-ED06-4DA1-8AE6-4032F25471C1}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{5B2B11E5-9BA1-457A-AC8B-E5C0A3127F39}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Contact", "Contact", "{FFD811B5-495A-493A-8AD0-4727ABAD8C3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contact.API", "Contact.API\Contact.API.csproj", "{C03CEAD4-13C8-49EE-883D-EA599DFB9582}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C03CEAD4-13C8-49EE-883D-EA599DFB9582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C03CEAD4-13C8-49EE-883D-EA599DFB9582}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C03CEAD4-13C8-49EE-883D-EA599DFB9582}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C03CEAD4-13C8-49EE-883D-EA599DFB9582}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{5B2B11E5-9BA1-457A-AC8B-E5C0A3127F39} = {DF3F183B-ED06-4DA1-8AE6-4032F25471C1}
+		{FFD811B5-495A-493A-8AD0-4727ABAD8C3B} = {5B2B11E5-9BA1-457A-AC8B-E5C0A3127F39}
+		{C03CEAD4-13C8-49EE-883D-EA599DFB9582} = {FFD811B5-495A-493A-8AD0-4727ABAD8C3B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {7ECCBACD-7DAA-4E93-9417-4891B9BE1041}
