@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Contact.API.Entities;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Contact.API.Model
 {
@@ -8,7 +10,7 @@ namespace Contact.API.Model
 
         public Guid PersonId { get; set; }
 
-        public int ContactInfoTypeId { get; set; }
+        public ContactInfoType ContactInfoType { get; set; }
 
         public string Info { get; set; }
 

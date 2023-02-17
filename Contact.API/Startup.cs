@@ -15,6 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Contact.API
@@ -45,6 +46,12 @@ namespace Contact.API
             services.AddDbContext<ContactContext>(
                 dbContextOptions => dbContextOptions.UseNpgsql(
                     Configuration["ConnectionStrings:RisePhoneBookPostgresDBConnStr"]));
+
+            services.AddControllers().AddJsonOptions(x =>
+            {
+                // serialize enums as strings in api responses 
+                x.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

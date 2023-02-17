@@ -10,7 +10,7 @@ namespace Contact.API.Services
         Task AddPersonAsync(Person person);
         void RemovePersonAsync(Person person);
 
-        Task<Person> GetPersonAsync(Guid personId);
+        Task<Person> GetPersonAsync(Guid personId, bool includeContactInfos);
 
         Task AddContactInfoAsync(Guid personId, ContactInfo contactInfo);
         void RemoveContactInfoAsync(ContactInfo contactInfo);

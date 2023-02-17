@@ -57,7 +57,7 @@ namespace Contact.API.Controllers
         {
             
             var person = await _personRepository
-                .GetPersonAsync(personId);
+                .GetPersonAsync(personId,true);
 
             if (person == null)
             {

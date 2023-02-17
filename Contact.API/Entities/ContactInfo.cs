@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace Contact.API.Entities
 {
@@ -15,4 +16,6 @@ namespace Contact.API.Entities
 
         public Person Person { get; set; }
     }
+
+    
 }

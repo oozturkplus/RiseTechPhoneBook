@@ -45,7 +45,7 @@ namespace Contact.API.Controllers
 
             await _personRepository.SaveChangesAsync();
 
-            Person updatedPerson=await _personRepository.GetPersonAsync(personId);
+            Person updatedPerson=await _personRepository.GetPersonAsync(personId,false);
             var updatedPersonDto =
                 _mapper.Map<Model.PersonDto>(updatedPerson);
 

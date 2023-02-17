@@ -18,7 +18,7 @@ namespace Contact.API.Services
         }
         public async Task AddContactInfoAsync(Guid personId,ContactInfo contactInfo)
         {
-            var person = await GetPersonAsync(personId);
+            var person = await GetPersonAsync(personId,false);
             if (person != null)
             {
                 person.ContactInfos.Add(contactInfo);
@@ -30,12 +30,18 @@ namespace Contact.API.Services
             _context.Person.Add(person);
         }
 
-        public async Task<Person> GetPersonAsync(Guid personId)
+        public async Task<Person> GetPersonAsync(Guid personId, bool includeContactInfos)
         {
-            return await _context.Person
-                  .Where(c => c.Id == personId).FirstOrDefaultAsync();
-        }
+            if (includeContactInfos)
+            {
+                return await _context.Person.Include(c => c.ContactInfos)
+                      .Where(c => c.Id == personId).FirstOrDefaultAsync();
+            }
 
+            return await _context.Person
+                      .Where(c => c.Id == personId).FirstOrDefaultAsync();
+        }
+         
 
         public async Task<IEnumerable<Person>> GetPersonsAsync()
         {
