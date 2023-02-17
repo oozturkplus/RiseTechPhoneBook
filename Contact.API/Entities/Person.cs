@@ -13,7 +13,7 @@ namespace Contact.API.Entities
 
         public string Company { get; set; }
 
-        public List<ContactInfo> ContactInfos { get; set; }
+        public ICollection<ContactInfo> ContactInfos { get; set; }=new List<ContactInfo>();
 
     }
 

@@ -6,7 +6,10 @@ namespace Contact.API.Profiles
     {
         public ContactInfoProfile()
         {
-            //CreateMap<Entities.ContactInfo, Model.ContactInfoDto>();
+            CreateMap<Entities.ContactInfo, Model.ContactInfoDto>();
+            CreateMap<Model.ContactInfoDto,Entities.ContactInfo>();
+            CreateMap<Model.ContactInfoForCreationDto, Entities.ContactInfo>();
+            CreateMap<Entities.ContactInfo,Model.ContactInfoForCreationDto>();
         }
     }
 }

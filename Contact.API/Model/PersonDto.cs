@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Contact.API.Entities;
+using System;
+using System.Collections.Generic;
 
 namespace Contact.API.Model
 {
@@ -10,5 +12,7 @@ namespace Contact.API.Model
         public string LastName { get; set; } = string.Empty;
 
         public string Company { get; set; } = string.Empty;
+
+        public ICollection<ContactInfoDto> ContactInfos { get; set; } = new List<ContactInfoDto>();
     }
 }

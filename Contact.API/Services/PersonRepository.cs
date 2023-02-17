@@ -61,6 +61,11 @@ namespace Contact.API.Services
             return (await _context.SaveChangesAsync() >= 0);
         }
 
+        public async Task<bool> PersonExistsAsync(Guid personId)
+        {
+            return await _context.Person.AnyAsync(c => c.Id == personId);
+        }
+
 
     }
 }

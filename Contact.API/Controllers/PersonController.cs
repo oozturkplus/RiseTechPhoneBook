@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Contact.API.Entities;
-using Contact.API.Infrastructure;
 using Contact.API.Model;
 using Contact.API.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -12,12 +11,12 @@ namespace Contact.API.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class ContactController : ControllerBase
+    public class PersonController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly IPersonRepository _personRepository;
 
-        public ContactController(
+        public PersonController(
             IMapper mapper, IPersonRepository  personRepository)
         {
             _mapper = mapper;
@@ -51,6 +50,8 @@ namespace Contact.API.Controllers
         }
 
         [HttpGet("{personId}", Name = "GetPerson")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<Person>> GetPerson(
             Guid personId)
         {
@@ -65,6 +66,8 @@ namespace Contact.API.Controllers
 
             return Ok(_mapper.Map<PersonDto>(person));
         }
+
+        
 
 
 

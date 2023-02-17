@@ -18,5 +18,7 @@ namespace Contact.API.Services
         Task<IEnumerable<Person>> GetPersonsAsync();
 
         Task<bool> SaveChangesAsync();
+
+        Task<bool> PersonExistsAsync(Guid personId);
     }
 }
