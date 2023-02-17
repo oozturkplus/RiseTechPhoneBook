@@ -1,6 +1,7 @@
 ﻿using Contact.API.Entities;
 using Contact.API.Infrastructure.EntityConfigurations;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 
 namespace Contact.API.Infrastructure
 {
@@ -25,10 +26,18 @@ namespace Contact.API.Infrastructure
             builder.ApplyConfiguration(new ContactInfoEntityTypeConfiguration());
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    }
+
+    public class ContactContextDesignFactory : IDesignTimeDbContextFactory<ContactContext>
+    {
+        
+        public ContactContext CreateDbContext(string[] args)
         {
-            optionsBuilder.UseNpgsql("RisePhoneBookPostgres");
-            base.OnConfiguring(optionsBuilder);
+            var optionsBuilder = new DbContextOptionsBuilder<ContactContext>()
+                .UseNpgsql();
+
+            return new ContactContext(optionsBuilder.Options);
         }
     }
+
 }
