@@ -54,7 +54,7 @@ namespace Contact.API.Controllers
         [HttpGet("{personId}", Name = "GetPerson")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult<Person>> GetPersonAsync(
+        public async Task<ActionResult<PersonDto>> GetPersonAsync(
             Guid personId)
         {
             

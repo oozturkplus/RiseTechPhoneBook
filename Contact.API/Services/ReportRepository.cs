@@ -1,7 +1,9 @@
 ﻿using Contact.API.Entities;
 using Contact.API.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Contact.API.Services
@@ -15,22 +17,35 @@ namespace Contact.API.Services
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task AddReportDemandAsync()
+        public async Task<Report> AddReportDemandAsync()
         {
             Report newReport = new Report();
-            
+
+            newReport.DemandDateUtc = DateTime.UtcNow;
+            newReport.Status = (int)ReportStatus.Waiting;
+
             await _context.Report.AddAsync(newReport);
 
+            return newReport;
+
         }
 
-        public Task<IEnumerable<Report>> GetAllReportsAsync()
+        public async Task<IEnumerable<Report>> GetAllReportsAsync()
         {
-            throw new System.NotImplementedException();
+            return await _context.Report.OrderBy(c => c.DemandDateUtc)
+                .ToListAsync();
         }
 
-        public Task<Report> GetReportAsync()
+        public async Task<Report?> GetReportAsync(Guid reportId)
         {
-            throw new System.NotImplementedException();
+            return await _context.Report
+                      .Where(c => c.Id == reportId)
+                      .FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> SaveChangesAsync()
+        {
+            return (await _context.SaveChangesAsync() >= 0);
         }
     }
 }

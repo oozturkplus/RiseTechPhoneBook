@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using Contact.API.Model;
 using Contact.API.Services;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -25,13 +25,74 @@ namespace Contact.API.Controllers
             _reportRepository = reportRepository;
         }
 
-        //[HttpPost]
-        //[Route("createreportdemand")]
-        //[ProducesResponseType((int)HttpStatusCode.Created)]
-        //public async Task<IEnumerable<PersonDto>> CreateReportDemand()
-        //{
-        //    //return await _reportRepository.AddReportDemandAsync();
-        //    return Ok(new List<PersonDto>());
-        //}
+        [HttpPost]
+        [Route("createreportdemand")]
+        [ProducesResponseType((int)HttpStatusCode.Created)]
+        public async Task<ActionResult<ReportDto>> CreateReportDemand()
+        {
+            var addedReportDemand= await _reportRepository.AddReportDemandAsync();
+
+            await _reportRepository.SaveChangesAsync();
+
+            return CreatedAtRoute("GetReport",
+                 new
+                 {
+                     reportId = addedReportDemand.Id
+                 },
+                 addedReportDemand);
+        }
+
+        [HttpGet("{reportId}", Name = "GetReport")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<ReportDto>> GetReportAsync(
+            Guid reportId)
+        {
+
+            var report = await _reportRepository
+                .GetReportAsync(reportId);
+
+            if (report == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<ReportDto>(report));
+        }
+
+        [HttpGet]
+        [Route("reports")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<ReportDto>>>
+            GetAllReportsAsync()
+        {
+            var reports = await _reportRepository.GetAllReportsAsync();
+
+            var reportsDto = reports.Select(
+                rpt => _mapper.Map<ReportDto>(rpt)
+                );
+
+            return Ok(reportsDto);
+        }
+
+        [HttpGet("{reportId}", Name = "GetReportDetail")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<ReportDto>>
+            GetReportDetailAsync(
+            Guid reportId)
+        {
+            return Ok();
+
+            //var report = await _reportRepository
+            //    .GetReportAsync(reportId);
+
+            //if (report == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //return Ok(_mapper.Map<ReportDto>(report));
+        }
     }
 }
