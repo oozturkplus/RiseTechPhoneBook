@@ -98,7 +98,7 @@ namespace Contact.API.Controllers
         [HttpGet]
         [Route("persons")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
-        public async Task<IEnumerable<PersonDto>> GetAllPersonAsync()
+        public async Task<ActionResult<IEnumerable<PersonDto>>> GetAllPersonAsync()
         {
             var persons = await _personRepository.GetPersonsAsync(false);
 
@@ -106,7 +106,7 @@ namespace Contact.API.Controllers
                 prs => _mapper.Map<PersonDto>(prs)
                 );
 
-            return personsDto;
+            return Ok(personsDto);
         }
     }
 }

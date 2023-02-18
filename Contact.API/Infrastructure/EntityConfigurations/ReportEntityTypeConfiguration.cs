@@ -12,7 +12,7 @@ namespace Contact.API.Infrastructure.EntityConfigurations
 
             builder.HasKey(co => co.Id);
 
-            builder.Property(cn => cn.DemandDate)
+            builder.Property(cn => cn.DemandDateUtc)
                 .IsRequired();
 
             builder.Property(cn => cn.Status)

@@ -17,7 +17,7 @@ namespace Contact.API.Infrastructure
         public DbSet<Person> Person { get; set; } = null!;
         public DbSet<ContactInfo> ContactInfo { get; set; } = null!;
 
-        public DbSet<ContactInfo> Report { get; set; } = null!;
+        public DbSet<Report> Report { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -34,7 +34,7 @@ namespace Contact.API.Infrastructure
         public ContactContext CreateDbContext(string[] args)
         {
             var optionsBuilder = new DbContextOptionsBuilder<ContactContext>()
-                .UseNpgsql();
+                .UseNpgsql("Host=host.docker.internal;Database=PhoneBook;Port=32768;Username=postgres;Password=postgrespw");
 
             return new ContactContext(optionsBuilder.Options);
         }
