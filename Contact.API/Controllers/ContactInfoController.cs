@@ -45,7 +45,7 @@ namespace Contact.API.Controllers
 
             await _personRepository.SaveChangesAsync();
 
-            Person updatedPerson=await _personRepository.GetPersonAsync(personId,false);
+            Person updatedPerson=await _personRepository.GetPersonAsync(personId,true);
             var updatedPersonDto =
                 _mapper.Map<Model.PersonDto>(updatedPerson);
 
@@ -55,6 +55,28 @@ namespace Contact.API.Controllers
                      personId = updatedPerson.Id
                  },
                  updatedPersonDto);
+        }
+
+        [HttpDelete("{contactInfoId}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult> DeleteContactInfoId(
+            Guid contactInfoId)
+        {
+
+            var contactInfoEntity = await _personRepository
+                .GetContactInfoForPersonAsync(contactInfoId);
+
+            if (contactInfoEntity == null)
+            {
+                return NotFound();
+            }
+
+            _personRepository.RemoveContactInfoAsync(contactInfoEntity);
+
+            await _personRepository.SaveChangesAsync();
+
+            return NoContent();
         }
     }
 }

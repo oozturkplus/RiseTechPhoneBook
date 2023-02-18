@@ -4,6 +4,8 @@ using Contact.API.Model;
 using Contact.API.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -52,7 +54,7 @@ namespace Contact.API.Controllers
         [HttpGet("{personId}", Name = "GetPerson")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult<Person>> GetPerson(
+        public async Task<ActionResult<Person>> GetPersonAsync(
             Guid personId)
         {
             
@@ -67,30 +69,44 @@ namespace Contact.API.Controllers
             return Ok(_mapper.Map<PersonDto>(person));
         }
 
-        
 
 
 
-        //[Route("items")]
-        //[HttpPost]
-        //[ProducesResponseType((int)HttpStatusCode.Created)]
-        //public async Task<ActionResult> CreateProductAsync([FromBody] CatalogItem product)
-        //{
-        //    var item = new CatalogItem
-        //    {
-        //        CatalogBrandId = product.CatalogBrandId,
-        //        CatalogTypeId = product.CatalogTypeId,
-        //        Description = product.Description,
-        //        Name = product.Name,
-        //        PictureFileName = product.PictureFileName,
-        //        Price = product.Price
-        //    };
 
-        //    _catalogContext.CatalogItems.Add(item);
+        [HttpDelete("{personId}")]
+        [ProducesResponseType((int)HttpStatusCode.NoContent)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult> DeletePerson(
+            Guid personId)
+        {
 
-        //    await _catalogContext.SaveChangesAsync();
+            var personEntity = await _personRepository
+                .GetPersonAsync(personId,false);
+           
+            if (personEntity == null)
+            {
+                return NotFound();
+            }
 
-        //    return CreatedAtAction(nameof(ItemByIdAsync), new { id = item.Id }, null);
-        //}
+            _personRepository.RemovePersonAsync(personEntity);
+
+            await _personRepository.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        [HttpGet]
+        [Route("persons")]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<IEnumerable<PersonDto>> GetAllPersonAsync()
+        {
+            var persons = await _personRepository.GetPersonsAsync(false);
+
+            var personsDto = persons.Select(
+                prs => _mapper.Map<PersonDto>(prs)
+                );
+
+            return personsDto;
+        }
     }
 }

@@ -10,15 +10,18 @@ namespace Contact.API.Services
         Task AddPersonAsync(Person person);
         void RemovePersonAsync(Person person);
 
-        Task<Person> GetPersonAsync(Guid personId, bool includeContactInfos);
+        Task<Person?> GetPersonAsync(Guid personId, bool includeContactInfos);
 
         Task AddContactInfoAsync(Guid personId, ContactInfo contactInfo);
         void RemoveContactInfoAsync(ContactInfo contactInfo);
 
-        Task<IEnumerable<Person>> GetPersonsAsync();
+        Task<IEnumerable<Person>> GetPersonsAsync(bool includeContactInfos);
 
         Task<bool> SaveChangesAsync();
 
         Task<bool> PersonExistsAsync(Guid personId);
+
+        Task<ContactInfo?> GetContactInfoForPersonAsync(
+            Guid contactInfoId);
     }
 }

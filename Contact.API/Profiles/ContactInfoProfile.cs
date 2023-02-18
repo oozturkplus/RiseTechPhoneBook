@@ -15,11 +15,7 @@ namespace Contact.API.Profiles
                             opt=>opt.MapFrom(source=>Enum.GetName(typeof(ContactInfoType),
                             source.ContactInfoTypeId))).ReverseMap();
 
-            //CreateMap<Model.ContactInfoDto, Entities.ContactInfo>()
-            //    .ConvertUsingEnumMapping(opt => opt
-            //    // optional: .MapByValue() or MapByName(), without configuration MapByValue is used
-            //    .MapValue(Source.First, Destination.Default));
-
+            
             CreateMap<Model.ContactInfoForCreationDto, Entities.ContactInfo>().ReverseMap();
         }
     }
