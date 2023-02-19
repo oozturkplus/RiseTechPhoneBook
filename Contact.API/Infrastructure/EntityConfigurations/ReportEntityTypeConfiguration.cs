@@ -12,6 +12,9 @@ namespace Contact.API.Infrastructure.EntityConfigurations
 
             builder.HasKey(co => co.Id);
 
+            builder.Property(cn => cn.ReportTrackingId)
+                .IsRequired();
+
             builder.Property(cn => cn.DemandDateUtc)
                 .IsRequired();
 

@@ -2,8 +2,12 @@
 using EventBus;
 using EventBus.Abstractions;
 using EventBus.Events;
+using Polly;
+using Polly.Retry;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using RabbitMQ.Client.Exceptions;
+using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 
@@ -57,36 +61,105 @@ namespace EventBusRabbitMQ
 
         public void Publish(IntegrationEvent @event)
         {
-            throw new NotImplementedException();
+            if (!_persistentConnection.IsConnected)
+            {
+                _persistentConnection.TryConnect();
+            }
+
+            var policy = RetryPolicy.Handle<BrokerUnreachableException>()
+                .Or<SocketException>()
+                .WaitAndRetry(_retryCount, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)), (ex, time) =>
+                {
+                    
+                });
+
+            var eventName = @event.GetType().Name;
+
+            
+
+            using var channel = _persistentConnection.CreateModel();
+            
+
+            channel.ExchangeDeclare(exchange: BROKER_NAME, type: "direct");
+
+            var body = JsonSerializer.SerializeToUtf8Bytes(@event, @event.GetType(), new JsonSerializerOptions
+            {
+                WriteIndented = true
+            });
+
+            policy.Execute(() =>
+            {
+                var properties = channel.CreateBasicProperties();
+                properties.DeliveryMode = 2; // persistent
+
+                
+
+                channel.BasicPublish(
+                    exchange: BROKER_NAME,
+                    routingKey: eventName,
+                    mandatory: true,
+                    basicProperties: properties,
+                    body: body);
+            });
         }
 
         public void Subscribe<T, TH>()
             where T : IntegrationEvent
             where TH : IIntegrationEventHandler<T>
         {
-            throw new NotImplementedException();
+            var eventName = _subsManager.GetEventKey<T>();
+            DoInternalSubscription(eventName);
+
+            
+            _subsManager.AddSubscription<T, TH>();
+            StartBasicConsume();
+        }
+
+        private void DoInternalSubscription(string eventName)
+        {
+            var containsKey = _subsManager.HasSubscriptionsForEvent(eventName);
+            if (!containsKey)
+            {
+                if (!_persistentConnection.IsConnected)
+                {
+                    _persistentConnection.TryConnect();
+                }
+
+                _consumerChannel.QueueBind(queue: _queueName,
+                                    exchange: BROKER_NAME,
+                                    routingKey: eventName);
+            }
         }
 
         public void SubscribeDynamic<TH>(string eventName) where TH : IDynamicIntegrationEventHandler
         {
-            throw new NotImplementedException();
+            
+            DoInternalSubscription(eventName);
+            _subsManager.AddDynamicSubscription<TH>(eventName);
+            StartBasicConsume();
         }
 
         public void Unsubscribe<T, TH>()
             where T : IntegrationEvent
             where TH : IIntegrationEventHandler<T>
         {
-            throw new NotImplementedException();
+            
+            _subsManager.RemoveSubscription<T, TH>();
         }
 
         public void UnsubscribeDynamic<TH>(string eventName) where TH : IDynamicIntegrationEventHandler
         {
-            throw new NotImplementedException();
+            _subsManager.RemoveDynamicSubscription<TH>(eventName);
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            if (_consumerChannel != null)
+            {
+                _consumerChannel.Dispose();
+            }
+
+            _subsManager.Clear();
         }
 
         private IModel CreateConsumerChannel()

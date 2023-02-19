@@ -6,6 +6,8 @@ namespace Contact.API.Entities
     {
         public Guid Id { get; set; }
 
+        public Guid ReportTrackingId { get; set; }
+
         public DateTime DemandDateUtc { get; set; }
 
         public int Status { get; set; }

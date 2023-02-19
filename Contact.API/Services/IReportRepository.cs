@@ -7,7 +7,7 @@ namespace Contact.API.Services
 {
     public interface IReportRepository
     {
-        Task<Report> AddReportDemandAsync();
+        Task<Report> AddReportDemandAsync(Guid reportDemandTrackingId);
 
         Task<IEnumerable<Report>> GetAllReportsAsync();
 

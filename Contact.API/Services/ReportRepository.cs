@@ -17,12 +17,13 @@ namespace Contact.API.Services
             _context = context ?? throw new ArgumentNullException(nameof(context));
         }
 
-        public async Task<Report> AddReportDemandAsync()
+        public async Task<Report> AddReportDemandAsync(Guid reportDemandTrackingId)
         {
             Report newReport = new Report();
 
             newReport.DemandDateUtc = DateTime.UtcNow;
             newReport.Status = (int)ReportStatus.Waiting;
+            newReport.ReportTrackingId= reportDemandTrackingId;
 
             await _context.Report.AddAsync(newReport);
 
