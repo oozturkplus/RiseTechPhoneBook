@@ -1,0 +1,23 @@
+FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+WORKDIR /app
+EXPOSE 80
+
+FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+WORKDIR /src
+COPY ["Report.BackgroundTasks/Report.BackgroundTasks.csproj", "Report.BackgroundTasks/"]
+COPY ["EventBusRabbitMQ/EventBusRabbitMQ.csproj", "EventBusRabbitMQ/"]
+COPY ["EventBus/EventBus.csproj", "EventBus/"]
+
+RUN dotnet restore "Report.BackgroundTasks/Report.BackgroundTasks.csproj"
+
+COPY . .
+WORKDIR "/src/Report.BackgroundTasks"
+RUN dotnet build "Report.BackgroundTasks.csproj" -c Release -o /app/build
+
+FROM build AS publish
+RUN dotnet publish "Report.BackgroundTasks.csproj" -c Release -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Report.BackgroundTasks.dll"]
